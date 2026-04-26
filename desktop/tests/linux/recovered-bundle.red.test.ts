@@ -163,7 +163,7 @@ describe('Recovered Codex bundle RED contract', () => {
       );
       expect(mainBundle).toContain('linux-global-shortcuts-portal.js');
       expect(mainBundle).toContain(
-        'if(process.platform===`linux`){n.clipboard.writeText(e);return}',
+        'new n.Notification({title:`Codex dictation`',
       );
       expect(mainBundle).toContain('t===`linux`?Ax(e).length>0');
       expect(mainBundle).toContain('isGateEnabled=process.platform===`linux`');

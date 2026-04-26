@@ -259,9 +259,9 @@ const mainLinuxGlobalDictationRegistrationPatchMarker =
 const mainLinuxGlobalDictationClipboardPatchTarget =
   'async function Zx(e){let t=Qx();n.clipboard.writeText(e),await(0,d.setTimeout)(Jx),await tS(),await(0,d.setTimeout)(Yx),$x(t,e)}';
 const mainLinuxGlobalDictationClipboardPatchReplacement =
-  'async function Zx(e){if(process.platform===`linux`){n.clipboard.writeText(e);return}let t=Qx();n.clipboard.writeText(e),await(0,d.setTimeout)(Jx),await tS(),await(0,d.setTimeout)(Yx),$x(t,e)}';
+  'async function Zx(e){if(process.platform===`linux`){n.clipboard.writeText(e);try{new n.Notification({title:`Codex dictation`,body:e.length>220?`${e.slice(0,220)}...`:e}).show()}catch{}return}let t=Qx();n.clipboard.writeText(e),await(0,d.setTimeout)(Jx),await tS(),await(0,d.setTimeout)(Yx),$x(t,e)}';
 const mainLinuxGlobalDictationClipboardPatchMarker =
-  'if(process.platform===`linux`){n.clipboard.writeText(e);return}';
+  'new n.Notification({title:`Codex dictation`';
 const mainLinuxGlobalDictationShortcutValidationPatchTarget =
   'function qx(e,t){return t===`darwin`?Vx(e).length>0:Ux(e,t)!=null}';
 const mainLinuxGlobalDictationShortcutValidationPatchReplacement =
