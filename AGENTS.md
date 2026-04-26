@@ -5,10 +5,10 @@
 - The upstream project is `git@github.com:am-will/codex-app.git`.
 - The user's fork is `https://github.com/forbidden-game/codex-app.git`.
 - Keep `main` as a clean tracking branch for `upstream/main`.
-- Keep user-maintained Linux patches on `codex/linux-global-dictation`.
+- Keep user-maintained Linux patches on `codex/linux-desktop-patches`.
 
 ## Current Linux Dictation Patch
-- The branch `codex/linux-global-dictation` contains the user's Linux global dictation work.
+- The branch `codex/linux-desktop-patches` contains the user's Linux global dictation work.
 - Important commits:
   - `f4aceba Add Linux global dictation hotkey support`
   - `902284a Show Linux dictation transcript notifications`
@@ -64,7 +64,7 @@ git fetch upstream
 git switch main
 git merge --ff-only upstream/main
 
-git switch codex/linux-global-dictation
+git switch codex/linux-desktop-patches
 git rebase main
 git push --force-with-lease
 ```
