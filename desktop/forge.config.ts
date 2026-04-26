@@ -60,7 +60,9 @@ const linuxHelperResourceRoot = path.resolve(
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: {
+      unpack: '**/linux-global-shortcuts-portal.py',
+    },
     icon: linuxPackagerIcon,
     extraResource: [
       path.join(linuxHelperResourceRoot, 'codex'),
@@ -90,6 +92,8 @@ const config: ForgeConfig = {
         '/node_modules/node-pty',
         '/node_modules/better-sqlite3',
         '/scripts/linux-browser-launch.js',
+        '/scripts/linux-global-shortcuts-portal.js',
+        '/scripts/linux-global-shortcuts-portal.py',
         '/resources',
       ].some((allowedPath) => file.startsWith(allowedPath));
     },

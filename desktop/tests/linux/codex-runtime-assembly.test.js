@@ -23,6 +23,24 @@ function runAssemblySnippet(snippet, tempRoot) {
 }
 
 describe('codex runtime assembly guards', () => {
+  test('linux global shortcuts portal helper maps electron accelerators to portal triggers', () => {
+    const helper = require('../../scripts/linux-global-shortcuts-portal.js');
+
+    expect(helper.toPortalTrigger('Ctrl+Alt+D')).toBe('CTRL+ALT+D');
+    expect(helper.toPortalTrigger('CommandOrControl+Shift+Space')).toBe(
+      'CTRL+SHIFT+Space',
+    );
+    expect(helper.toPortalTrigger('Super+Shift+Space')).toBe('META+SHIFT+Space');
+    expect(helper.toHyprlandBind('CTRL+ALT+D')).toEqual({
+      mods: 'CTRL ALT',
+      key: 'D',
+    });
+    expect(helper.toHyprlandBind('META+SHIFT+Space')).toEqual({
+      mods: 'SUPER SHIFT',
+      key: 'SPACE',
+    });
+  });
+
   test('reuses the default generated runtime root but still rejects other existing outputs', () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-runtime-output-'));
     const reusableRoot = path.join(tempRoot, 'codex-runtime');

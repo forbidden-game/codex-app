@@ -33,6 +33,16 @@ const linuxBrowserLauncherSourcePath = path.join(
   'scripts',
   'linux-browser-launch.js',
 );
+const linuxGlobalShortcutsPortalSourcePath = path.join(
+  desktopRoot,
+  'scripts',
+  'linux-global-shortcuts-portal.js',
+);
+const linuxGlobalShortcutsPortalPythonSourcePath = path.join(
+  desktopRoot,
+  'scripts',
+  'linux-global-shortcuts-portal.py',
+);
 const preloadPatchPattern =
   /sendMessageFromView:async t=>\{(.*?),await e\.ipcRenderer\.invoke\(([\w$]+),t\)\}/;
 const preloadPatchReplacement =
@@ -234,6 +244,42 @@ const mainLinuxNativeMenuPatchAlternatives = [
 ];
 const mainLinuxNativeMenuPatchMarker =
   '(process.platform===`win32`||process.platform===`linux`)?{autoHideMenuBar:!0}:{}';
+const mainLinuxGlobalDictationSupportPatchTarget =
+  'function lS(){return process.platform===`darwin`||process.platform===`win32`}';
+const mainLinuxGlobalDictationSupportPatchReplacement =
+  'function lS(){return process.platform===`darwin`||process.platform===`win32`||process.platform===`linux`}';
+const mainLinuxGlobalDictationSupportPatchMarker =
+  'process.platform===`darwin`||process.platform===`win32`||process.platform===`linux`';
+const mainLinuxGlobalDictationRegistrationPatchTarget =
+  'function Ex(e,t){return gc(e)?hc(e)?uc(e,t):null:n.globalShortcut.register(e,t.onPressed)?{handlesRelease:!1,unregister:()=>{n.globalShortcut.unregister(e)}}:null}';
+const mainLinuxGlobalDictationRegistrationPatchReplacement =
+  'function Ex(e,t){if(process.platform===`linux`){try{return require(`../../scripts/linux-global-shortcuts-portal.js`).registerLinuxGlobalShortcutPortal(e,t)}catch{return null}}return gc(e)?hc(e)?uc(e,t):null:n.globalShortcut.register(e,t.onPressed)?{handlesRelease:!1,unregister:()=>{n.globalShortcut.unregister(e)}}:null}';
+const mainLinuxGlobalDictationRegistrationPatchMarker =
+  'linux-global-shortcuts-portal.js';
+const mainLinuxGlobalDictationClipboardPatchTarget =
+  'async function Zx(e){let t=Qx();n.clipboard.writeText(e),await(0,d.setTimeout)(Jx),await tS(),await(0,d.setTimeout)(Yx),$x(t,e)}';
+const mainLinuxGlobalDictationClipboardPatchReplacement =
+  'async function Zx(e){if(process.platform===`linux`){n.clipboard.writeText(e);return}let t=Qx();n.clipboard.writeText(e),await(0,d.setTimeout)(Jx),await tS(),await(0,d.setTimeout)(Yx),$x(t,e)}';
+const mainLinuxGlobalDictationClipboardPatchMarker =
+  'if(process.platform===`linux`){n.clipboard.writeText(e);return}';
+const mainLinuxGlobalDictationShortcutValidationPatchTarget =
+  'function qx(e,t){return t===`darwin`?Vx(e).length>0:Ux(e,t)!=null}';
+const mainLinuxGlobalDictationShortcutValidationPatchReplacement =
+  'function qx(e,t){return t===`darwin`?Vx(e).length>0:t===`linux`?Ax(e).length>0:Ux(e,t)!=null}';
+const mainLinuxGlobalDictationShortcutValidationPatchMarker =
+  't===`linux`?Ax(e).length>0';
+const mainLinuxGlobalDictationGatePatchTarget =
+  'setGateEnabled(e){this.isGateEnabled!==e&&(this.isGateEnabled=e,this.applyLifecycleWithWarning(`gate-change`))}';
+const mainLinuxGlobalDictationGatePatchReplacement =
+  'setGateEnabled(e){let t=process.platform===`linux`?!0:e;this.isGateEnabled!==t&&(this.isGateEnabled=t,this.applyLifecycleWithWarning(`gate-change`))}';
+const mainLinuxGlobalDictationGatePatchMarker =
+  'process.platform===`linux`?!0:e';
+const mainLinuxGlobalDictationInitialGatePatchTarget =
+  'isGateEnabled=!1;configuredHotkey;';
+const mainLinuxGlobalDictationInitialGatePatchReplacement =
+  'isGateEnabled=process.platform===`linux`;configuredHotkey;';
+const mainLinuxGlobalDictationInitialGatePatchMarker =
+  'isGateEnabled=process.platform===`linux`';
 const appServerSteerPatchTarget =
   'try{let r=await hh(e,t);e.setPendingSteerTurnId(t,c.id,r);try{return await ph(e,t,n.input,r)}catch(r){let i=mh(r);if(i==null)throw r;return e.updateConversationState(t,e=>{let t=(0,$.default)(e.turns);t?.status===`inProgress`&&(t.turnId=i)}),e.setPendingSteerTurnId(t,c.id,i),await ph(e,t,n.input,i)}}catch(n){throw e.removePendingSteer(t,c.id),i.error(`Error submitting steering turn for conversation`,{safe:{conversationId:t},sensitive:{error:n}}),n}}';
 const appServerSteerPatchReplacement =
@@ -1057,6 +1103,42 @@ function patchCodexMainProcessBundle(extractedAppRoot) {
         alternatives: mainLinuxOpenTargetsPatchAlternatives,
         marker: mainLinuxOpenTargetsPatchMarker,
       },
+      {
+        label: 'linux global dictation support gate',
+        target: mainLinuxGlobalDictationSupportPatchTarget,
+        replacement: mainLinuxGlobalDictationSupportPatchReplacement,
+        marker: mainLinuxGlobalDictationSupportPatchMarker,
+      },
+      {
+        label: 'linux global dictation portal registration',
+        target: mainLinuxGlobalDictationRegistrationPatchTarget,
+        replacement: mainLinuxGlobalDictationRegistrationPatchReplacement,
+        marker: mainLinuxGlobalDictationRegistrationPatchMarker,
+      },
+      {
+        label: 'linux global dictation clipboard only',
+        target: mainLinuxGlobalDictationClipboardPatchTarget,
+        replacement: mainLinuxGlobalDictationClipboardPatchReplacement,
+        marker: mainLinuxGlobalDictationClipboardPatchMarker,
+      },
+      {
+        label: 'linux global dictation shortcut validation',
+        target: mainLinuxGlobalDictationShortcutValidationPatchTarget,
+        replacement: mainLinuxGlobalDictationShortcutValidationPatchReplacement,
+        marker: mainLinuxGlobalDictationShortcutValidationPatchMarker,
+      },
+      {
+        label: 'linux global dictation renderer gate',
+        target: mainLinuxGlobalDictationGatePatchTarget,
+        replacement: mainLinuxGlobalDictationGatePatchReplacement,
+        marker: mainLinuxGlobalDictationGatePatchMarker,
+      },
+      {
+        label: 'linux global dictation initial gate',
+        target: mainLinuxGlobalDictationInitialGatePatchTarget,
+        replacement: mainLinuxGlobalDictationInitialGatePatchReplacement,
+        marker: mainLinuxGlobalDictationInitialGatePatchMarker,
+      },
     ]),
   );
 }
@@ -1327,9 +1409,51 @@ function stageLinuxBrowserLauncher(extractedAppRoot) {
   };
 }
 
+function stageLinuxGlobalShortcutsPortal(extractedAppRoot) {
+  const destinationPath = path.join(
+    extractedAppRoot,
+    'scripts',
+    'linux-global-shortcuts-portal.js',
+  );
+  const pythonDestinationPath = path.join(
+    extractedAppRoot,
+    'scripts',
+    'linux-global-shortcuts-portal.py',
+  );
+  copyRequired(
+    linuxGlobalShortcutsPortalSourcePath,
+    destinationPath,
+    'Linux global shortcuts portal helper',
+  );
+  copyRequired(
+    linuxGlobalShortcutsPortalPythonSourcePath,
+    pythonDestinationPath,
+    'Linux global shortcuts portal Python helper',
+  );
+
+  return {
+    patched: true,
+    results: [
+      {
+        label: 'linux global shortcuts portal helper',
+        patched: true,
+        skipped: false,
+        reason: null,
+      },
+      {
+        label: 'linux global shortcuts portal python helper',
+        patched: true,
+        skipped: false,
+        reason: null,
+      },
+    ],
+  };
+}
+
 export function patchExtractedCodexApp(extractedAppRoot) {
   return {
     linuxBrowserLauncher: stageLinuxBrowserLauncher(extractedAppRoot),
+    linuxGlobalShortcutsPortal: stageLinuxGlobalShortcutsPortal(extractedAppRoot),
     preload: patchCodexPreload(extractedAppRoot),
     bootstrap: patchCodexBootstrap(extractedAppRoot),
     mainProcess: patchCodexMainProcessBundle(extractedAppRoot),

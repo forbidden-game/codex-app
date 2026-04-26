@@ -158,6 +158,16 @@ describe('Recovered Codex bundle RED contract', () => {
       expect(mainBundle).toContain(
         '(process.platform===`win32`||process.platform===`linux`)&&k.removeMenu()',
       );
+      expect(mainBundle).toContain(
+        'process.platform===`darwin`||process.platform===`win32`||process.platform===`linux`',
+      );
+      expect(mainBundle).toContain('linux-global-shortcuts-portal.js');
+      expect(mainBundle).toContain(
+        'if(process.platform===`linux`){n.clipboard.writeText(e);return}',
+      );
+      expect(mainBundle).toContain('t===`linux`?Ax(e).length>0');
+      expect(mainBundle).toContain('isGateEnabled=process.platform===`linux`');
+      expect(mainBundle).toContain('process.platform===`linux`?!0:');
       expect(mainBundle).toContain('function linuxResolveEditorTarget(');
       expect(mainBundle).toMatch(
         /\.filter\(t=>\{try\{return!!t&&[a-z]\.existsSync\(t\)\}catch\{return!1\}\}\)/,
@@ -248,6 +258,12 @@ describe('Recovered Codex bundle RED contract', () => {
           }),
           expect.objectContaining({ label: 'linux primary window uses custom title bar' }),
           expect.objectContaining({ label: 'linux open-in target registry' }),
+          expect.objectContaining({ label: 'linux global dictation support gate' }),
+          expect.objectContaining({ label: 'linux global dictation portal registration' }),
+          expect.objectContaining({ label: 'linux global dictation clipboard only' }),
+          expect.objectContaining({ label: 'linux global dictation shortcut validation' }),
+          expect.objectContaining({ label: 'linux global dictation renderer gate' }),
+          expect.objectContaining({ label: 'linux global dictation initial gate' }),
         ]),
       );
     },
@@ -478,6 +494,7 @@ describe('Recovered Codex bundle RED contract', () => {
     expect(forgeConfig).toContain("'linux-arm64'");
     expect(forgeConfig).toContain("path.join(linuxHelperResourceRoot, 'codex')");
     expect(forgeConfig).toContain("path.join(linuxHelperResourceRoot, 'rg')");
+    expect(forgeConfig).toContain("unpack: '**/linux-global-shortcuts-portal.py'");
     expect(forgeConfig).toContain('new AutoUnpackNativesPlugin');
     expect(forgeConfig).toContain('new MakerDeb');
     expect(forgeConfig).toContain('new MakerRpm');
@@ -541,6 +558,27 @@ describe('Recovered Codex bundle RED contract', () => {
       /[a-z]=\([a-z]&&[a-z]\.length>0\?[a-z]:[a-z]\.filter\(e=>e!==`~`\)\.map\(t=>e\.[A-Za-z$_]+\([a-z]\)\)\)\.filter\(t=>\{try\{return!!t&&[a-z]\.existsSync\(t\)\}catch\{return!1\}\}\)/,
     );
     expect(mainSource).toContain('windowHostId:this.hostConfig.id}});');
+  });
+
+  test('assembly patches Linux global dictation through the global shortcuts portal', () => {
+    const assembleScript = readDesktopFile('scripts/assemble-codex-runtime.mjs');
+    const portalHelper = readDesktopFile('scripts/linux-global-shortcuts-portal.js');
+    const portalPythonHelper = readDesktopFile('scripts/linux-global-shortcuts-portal.py');
+
+    expect(assembleScript).toContain('linux global dictation support gate');
+    expect(assembleScript).toContain('linux global dictation portal registration');
+    expect(assembleScript).toContain('linux global dictation clipboard only');
+    expect(assembleScript).toContain('linux global dictation shortcut validation');
+    expect(assembleScript).toContain('linux global dictation renderer gate');
+    expect(assembleScript).toContain('linux global dictation initial gate');
+    expect(assembleScript).toContain('linux-global-shortcuts-portal.js');
+    expect(assembleScript).toContain('linux-global-shortcuts-portal.py');
+    expect(portalHelper).toContain('linux-global-shortcuts-portal.py');
+    expect(portalPythonHelper).toContain('org.freedesktop.portal.GlobalShortcuts');
+    expect(portalPythonHelper).toContain('Activated');
+    expect(portalPythonHelper).toContain('Deactivated');
+    expect(portalPythonHelper).toContain('dbus.SessionBus()');
+    expect(portalPythonHelper).toContain('BindShortcuts');
   });
 
   test('git worker exposes the refreshed repo-watch and host-path contract', () => {
