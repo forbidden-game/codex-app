@@ -1450,6 +1450,25 @@ function stageLinuxGlobalShortcutsPortal(extractedAppRoot) {
   };
 }
 
+export function stageLinuxGlobalShortcutsPortalUnpacked(resourcesRoot) {
+  const destinationPath = path.join(
+    resourcesRoot,
+    'app.asar.unpacked',
+    'scripts',
+    'linux-global-shortcuts-portal.py',
+  );
+  copyRequired(
+    linuxGlobalShortcutsPortalPythonSourcePath,
+    destinationPath,
+    'Linux global shortcuts portal Python helper unpacked copy',
+  );
+
+  return {
+    label: 'linux global shortcuts portal python helper unpacked copy',
+    path: destinationPath,
+  };
+}
+
 export function patchExtractedCodexApp(extractedAppRoot) {
   return {
     linuxBrowserLauncher: stageLinuxBrowserLauncher(extractedAppRoot),
@@ -1562,6 +1581,7 @@ export async function assembleCodexRuntime({ outputRoot }) {
   await asar.createPackageWithOptions(extractedAppRoot, path.join(resourcesRoot, 'app.asar'), {
     unpack: '*.node',
   });
+  const unpackedPortalHelperSummary = stageLinuxGlobalShortcutsPortalUnpacked(resourcesRoot);
 
   const requiredResources = ['codex', 'git', 'rg'];
   for (const resourceName of requiredResources) {
@@ -1591,6 +1611,7 @@ export async function assembleCodexRuntime({ outputRoot }) {
     resourcesRoot,
     patchSummary,
     nativeModuleSummary,
+    unpackedPortalHelperSummary,
     copiedFiles,
   };
 

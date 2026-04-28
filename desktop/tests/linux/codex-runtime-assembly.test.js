@@ -41,6 +41,34 @@ describe('codex runtime assembly guards', () => {
     });
   });
 
+  test('stages the Linux global shortcuts Python helper outside app.asar', () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-portal-unpacked-'));
+    const resourcesRoot = path.join(tempRoot, 'resources');
+
+    const result = runAssemblySnippet(
+      `
+      import fs from 'node:fs';
+      import path from 'node:path';
+      const summary = runtime.stageLinuxGlobalShortcutsPortalUnpacked(${JSON.stringify(resourcesRoot)});
+      const helperPath = path.join(${JSON.stringify(resourcesRoot)}, 'app.asar.unpacked', 'scripts', 'linux-global-shortcuts-portal.py');
+      process.stdout.write(JSON.stringify({
+        summary,
+        exists: fs.existsSync(helperPath),
+        source: fs.readFileSync(helperPath, 'utf8').slice(0, 64),
+      }));
+      `,
+      tempRoot,
+    );
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(result.stdout);
+    expect(output.exists).toBe(true);
+    expect(output.summary.label).toBe(
+      'linux global shortcuts portal python helper unpacked copy',
+    );
+    expect(output.source).toContain('#!/usr/bin/env python3');
+  });
+
   test('reuses the default generated runtime root but still rejects other existing outputs', () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-runtime-output-'));
     const reusableRoot = path.join(tempRoot, 'codex-runtime');
