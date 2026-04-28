@@ -131,8 +131,8 @@ describe('Recovered Codex bundle RED contract', () => {
       );
 
       expect(summary.outputRoot).toBe(outputRoot);
-      expect(summary.version).toBe('26.422.21637');
-      expect(summary.buildNumber).toBe('2056');
+      expect(summary.version).toBe('26.422.30944');
+      expect(summary.buildNumber).toBe('2080');
       expect(summary.electronVersion).toBe('41.2.0');
       expect(summary.appAsarSha256).toMatch(/^[a-f0-9]{64}$/);
       if (summary.sourceType === 'dmg') {
@@ -328,8 +328,8 @@ describe('Recovered Codex bundle RED contract', () => {
     const preloadSource = readDesktopFile('recovered/app-asar-extracted/.vite/build/preload.js');
 
     expect(packageJson.main).toBe('recovered/app-asar-extracted/.vite/build/bootstrap.js');
-    expect(packageJson.version).toBe('26.422.21647');
-    expect(packageJson.codexBuildNumber).toBe('2056');
+    expect(packageJson.version).toBe('26.422.30944');
+    expect(packageJson.codexBuildNumber).toBe('2080');
     expect(packageJson.devDependencies?.electron).toBe('41.2.0');
     expect(packageJson.devDependencies?.['@electron/rebuild']).toBeDefined();
     expect(packageJson.dependencies?.['better-sqlite3']).toBeDefined();
@@ -375,8 +375,8 @@ describe('Recovered Codex bundle RED contract', () => {
     expect(manifest.appAsarSha256).toMatch(/^[a-f0-9]{64}$/);
     expect(manifest.dmgPath).toBeNull();
     expect(manifest.dmgSha256).toBeNull();
-    expect(manifest.version).toBe('26.422.21637');
-    expect(manifest.buildNumber).toBe('2056');
+    expect(manifest.version).toBe('26.422.30944');
+    expect(manifest.buildNumber).toBe('2080');
     expect(manifest.electronVersion).toBe('41.2.0');
     expect(manifest.patchSummary?.authWebview?.pluginsPage?.results).toEqual(
       expect.arrayContaining([
@@ -458,7 +458,7 @@ describe('Recovered Codex bundle RED contract', () => {
     expect(pluginsPage).toContain('windowsMenuBar.file');
   });
 
-  test('model settings patch hooks remain available even when the latest upstream bundle skips them', () => {
+  test('model settings patch hooks stay applied in the refreshed upstream bundle', () => {
     const modelSettingsSource = readRecoveredAsset('use-model-settings-');
     const assembleScript = readDesktopFile('scripts/assemble-codex-runtime.mjs');
     const manifest = JSON.parse(
@@ -466,7 +466,7 @@ describe('Recovered Codex bundle RED contract', () => {
     ) as {
       patchSummary: {
         modelSettings: {
-          results: unknown[];
+          results: Array<{ label: string; patched: boolean; skipped: boolean }>;
         };
       };
     };
@@ -479,7 +479,25 @@ describe('Recovered Codex bundle RED contract', () => {
     expect(assembleScript).toContain('model settings saved-config cwd fallback');
     expect(assembleScript).toContain('model settings direct user config write');
     expect(assembleScript).toContain('model settings config path hook position');
-    expect(manifest.patchSummary.modelSettings.results).toEqual([]);
+    expect(manifest.patchSummary.modelSettings.results).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: 'model settings saved-config cwd fallback',
+          patched: true,
+          skipped: false,
+        }),
+        expect.objectContaining({
+          label: 'model settings direct user config write',
+          patched: true,
+          skipped: false,
+        }),
+        expect.objectContaining({
+          label: 'model settings config path hook position',
+          patched: true,
+          skipped: false,
+        }),
+      ]),
+    );
   });
 
   test('forge packaging includes the recovered bundle path', () => {

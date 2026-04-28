@@ -2,11 +2,11 @@
   "sourceType": "app-asar",
   "dmgPath": null,
   "dmgSha256": null,
-  "appAsarPath": "/home/amwill/Applications/codex-app/codex-dmg/Codex.app/Contents/Resources/app.asar",
-  "appAsarSha256": "a802d73d077494c8b7d7462042ff091badabcc038dadbfc1096e7d9dd9bc1ad5",
-  "outputRoot": "/home/amwill/Applications/codex-app/desktop/recovered/app-asar-extracted",
-  "version": "26.422.21637",
-  "buildNumber": "2056",
+  "appAsarPath": "/home/pxz/Work/oss/codex-app/codex-dmg/Codex.app/Contents/Resources/app.asar",
+  "appAsarSha256": "bcfe5e519cf7a6aafdc22e62ace58d8c34a8891f42d688e040cf019875338df4",
+  "outputRoot": "/home/pxz/Work/oss/codex-app/desktop/recovered/app-asar-extracted",
+  "version": "26.422.30944",
+  "buildNumber": "2080",
   "electronVersion": "41.2.0",
   "main": ".vite/build/bootstrap.js",
   "patchSummary": {
@@ -15,6 +15,23 @@
       "results": [
         {
           "label": "linux browser session helper",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        }
+      ]
+    },
+    "linuxGlobalShortcutsPortal": {
+      "patched": true,
+      "results": [
+        {
+          "label": "linux global shortcuts portal helper",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global shortcuts portal python helper",
           "patched": true,
           "skipped": false,
           "reason": null
@@ -108,6 +125,42 @@
         },
         {
           "label": "linux open-in target registry",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation support gate",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation portal registration",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation clipboard only",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation shortcut validation",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation renderer gate",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "linux global dictation initial gate",
           "patched": true,
           "skipped": false,
           "reason": null
@@ -244,17 +297,35 @@
       }
     },
     "modelSettings": {
-      "patched": false,
-      "results": []
+      "patched": true,
+      "results": [
+        {
+          "label": "model settings saved-config cwd fallback",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "model settings direct user config write",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        },
+        {
+          "label": "model settings config path hook position",
+          "patched": true,
+          "skipped": false,
+          "reason": null
+        }
+      ]
     }
   },
   "nativeModuleSummary": {
-    "sourceNodeModulesRoot": "/home/amwill/Applications/codex-app/desktop/node_modules",
+    "sourceNodeModulesRoot": "/home/pxz/Work/oss/codex-app/desktop/node_modules",
     "copiedFiles": [
       "better-sqlite3/build/Release/better_sqlite3.node",
       "node-pty/build/Release/pty.node",
       "node-pty/build/Release/obj.target/pty.node",
-      "node-pty/bin/linux-x64-143/node-pty.node",
       "node-pty/bin/linux-x64-145/node-pty.node"
     ]
   },
